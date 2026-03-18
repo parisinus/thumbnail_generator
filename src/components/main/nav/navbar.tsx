@@ -33,9 +33,9 @@ export default function Navbar() {
       </div>
 
       {/* 오른쪽 - Get Started 버튼 */}
-      <button className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-blue-200">
+      <Link href="/auth" className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-blue-200">
         Get Started
-      </button>
+      </Link>
 
     </nav>
   );

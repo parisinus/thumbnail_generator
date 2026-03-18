@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -25,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${bebasNeue.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-[var(--font-dm-sans)]">{children}</body>
+      <body className="min-h-full flex flex-col font-[var(--font-dm-sans)]">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
