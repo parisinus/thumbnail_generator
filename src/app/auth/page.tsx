@@ -1,5 +1,8 @@
 'use client'
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 
@@ -7,6 +10,15 @@ import Image from "next/image";
 const YOUTUBE_VIDEO_ID = "dQw4w9WgXcQ"
 
 export default function AuthPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard')
+    }
+  }, [user, loading, router])
+
   async function handleGoogleLogin() {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({

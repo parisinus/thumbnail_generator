@@ -24,6 +24,11 @@
   to { background-position: 0% 50%; }
 }
 
+@keyframes spin-border {
+  to { transform: rotate(360deg); }
+}
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

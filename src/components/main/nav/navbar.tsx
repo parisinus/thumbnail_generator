@@ -1,5 +1,8 @@
+'use client'
+
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -8,6 +11,8 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { user, loading } = useAuth()
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4">
 
@@ -32,10 +37,24 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* 오른쪽 - Get Started 버튼 */}
-      <Link href="/auth" className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-blue-200">
-        Get Started
-      </Link>
+      {/* 오른쪽 - 로그인 상태에 따라 버튼 변경 */}
+      {!loading && (
+        user ? (
+          <Link
+            href="/dashboard"
+            className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-blue-200"
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <Link
+            href="/auth"
+            className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-blue-200"
+          >
+            Get Started
+          </Link>
+        )
+      )}
 
     </nav>
   );
