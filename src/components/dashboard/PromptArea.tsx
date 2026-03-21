@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { LoadingLines } from "./LoadingLines"
 import { createClient } from "@/lib/supabase/client"
+import { useAuth } from "@/context/AuthContext"
 
 // ── Radix: Tooltip ──────────────────────────────────────────────────────────
 const TooltipProvider = TooltipPrimitive.Provider
@@ -571,7 +572,8 @@ function PromptBox({
 }
 
 // ── PromptArea (exported) ────────────────────────────────────────────────────
-export function PromptArea({ onNewThumbnail }: { onNewThumbnail?: () => void } = {}) {
+export function PromptArea({ onNewThumbnail, onOutOfCredits }: { onNewThumbnail?: () => void; onOutOfCredits?: () => void } = {}) {
+  const { refreshCredits } = useAuth()
   const [value, setValue] = React.useState("")
   const [imagePreviews, setImagePreviews] = React.useState<string[]>([])
   const [selectedTool, setSelectedTool] = React.useState<string | null>(null)
@@ -598,6 +600,10 @@ export function PromptArea({ onNewThumbnail }: { onNewThumbnail?: () => void } =
       })
 
       const data = await res.json()
+      if (res.status === 402) {
+        onOutOfCredits?.()
+        return
+      }
       if (!res.ok) throw new Error(data.error ?? "Failed to generate thumbnail")
 
       setResult(data.thumbnail)
@@ -605,6 +611,7 @@ export function PromptArea({ onNewThumbnail }: { onNewThumbnail?: () => void } =
       setImagePreviews([])
       setSelectedTool(null)
       onNewThumbnail?.()
+      await refreshCredits()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {

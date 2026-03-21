@@ -13,6 +13,17 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // 크레딧 확인
+  const { data: profile } = await supabase
+    .from("users")
+    .select("credits")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.credits < 1) {
+    return Response.json({ error: "Insufficient credits" }, { status: 402 });
+  }
+
   const { prompt, tool, referenceImages } = await request.json();
 
   if (!prompt?.trim() && (!referenceImages || referenceImages.length === 0)) {
@@ -98,6 +109,12 @@ export async function POST(request: Request) {
         reference_image_path: refStoragePath,
       })
       .eq("id", thumbnailId);
+
+    // 크레딧 차감
+    await supabase
+      .from("users")
+      .update({ credits: profile.credits - 1 })
+      .eq("id", user.id);
 
     // 클라이언트에 반환할 Signed URL 생성 (1시간 유효)
     const { data: signedUrlData } = await supabase.storage
