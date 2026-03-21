@@ -48,6 +48,12 @@ export async function POST(request: Request) {
 
   const thumbnailId = thumbnail.id;
 
+  // 크레딧 선차감 (생성 시작 전)
+  await supabase
+    .from("users")
+    .update({ credits: profile.credits - 1 })
+    .eq("id", user.id);
+
   try {
     // 참조 이미지 data URL 배열 → { base64, mimeType }[] 변환
     const parsedRefImages: { base64: string; mimeType: string }[] = [];
@@ -110,12 +116,6 @@ export async function POST(request: Request) {
       })
       .eq("id", thumbnailId);
 
-    // 크레딧 차감
-    await supabase
-      .from("users")
-      .update({ credits: profile.credits - 1 })
-      .eq("id", user.id);
-
     // 클라이언트에 반환할 Signed URL 생성 (1시간 유효)
     const { data: signedUrlData } = await supabase.storage
       .from("thumbnails")
@@ -134,11 +134,15 @@ export async function POST(request: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
 
-    // 실패 시 DB 상태 업데이트
+    // 실패 시 DB 상태 업데이트 + 크레딧 환불
     await supabase
       .from("thumbnails")
       .update({ status: "failed", error_message: message })
       .eq("id", thumbnailId);
+    await supabase
+      .from("users")
+      .update({ credits: profile.credits })
+      .eq("id", user.id);
 
     return Response.json({ error: message }, { status: 500 });
   }

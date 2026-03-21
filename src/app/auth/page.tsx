@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
+import Link from "next/link";
 
 // 왼쪽 패널에 표시할 유튜브 영상 ID (필요시 교체)
 const YOUTUBE_VIDEO_ID = "dQw4w9WgXcQ"
@@ -117,9 +118,9 @@ export default function AuthPage() {
             {/* Terms */}
             <p className="text-xs text-slate-400 text-center leading-relaxed">
               By continuing, you agree to our{" "}
-              <span className="text-slate-600 underline underline-offset-2 cursor-pointer">Terms of Service</span>
+              <Link href="/terms" className="text-slate-600 underline underline-offset-2 hover:text-slate-900 transition-colors">Terms of Service</Link>
               {" "}and{" "}
-              <span className="text-slate-600 underline underline-offset-2 cursor-pointer">Privacy Policy</span>
+              <Link href="/privacy" className="text-slate-600 underline underline-offset-2 hover:text-slate-900 transition-colors">Privacy Policy</Link>
             </p>
 
           </div>

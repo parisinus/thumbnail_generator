@@ -30,24 +30,24 @@ export default function DashboardNav() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 pointer-events-none">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 pointer-events-none">
 
-        {/* 로고 - 독립 플로팅 버튼 */}
+        {/* 로고 - 사이드바 너비(w-64)에 꽉 차게 */}
         <Link
           href="/dashboard"
-          className="pointer-events-auto bg-white/80 backdrop-blur-md border border-slate-200/70 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-all"
+          className="pointer-events-auto w-64 bg-white/10 backdrop-blur-md border-r border-white/15 px-6 py-2.5 hover:bg-white/15 transition-all flex items-center"
         >
           <Image src="/thumbgen-logo.svg" alt="Thumbgen" width={120} height={25} />
         </Link>
 
         {/* 프로필 - 독립 플로팅 버튼 + 호버 팝오버 */}
-        <div className="pointer-events-auto relative group">
+        <div className="pointer-events-auto relative group mr-6">
 
           {/* 아바타 버튼 (크레딧 배지 포함) */}
           <div className="bg-white/80 backdrop-blur-md border border-slate-200/70 rounded-2xl px-3 py-2.5 shadow-sm cursor-pointer hover:shadow-md transition-all flex items-center gap-2">
             {credits !== null && (
               <span className="text-xs font-semibold text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full">
-                {credits} cr
+                {subscriptionTier ? subscriptionTier.charAt(0).toUpperCase() + subscriptionTier.slice(1) : "Free"}
               </span>
             )}
             {avatarUrl ? (
@@ -84,10 +84,16 @@ export default function DashboardNav() {
                 </div>
               </div>
 
-              {/* 크레딧 표시 */}
+              {/* 플랜 & 크레딧 표시 */}
               {credits !== null && (
                 <>
                   <div className="h-px bg-slate-100 my-1" />
+                  <div className="px-3 py-1.5 flex items-center justify-between">
+                    <span className="text-xs text-slate-500">Plan</span>
+                    <span className="text-xs font-bold text-violet-600">
+                      {subscriptionTier ? subscriptionTier.charAt(0).toUpperCase() + subscriptionTier.slice(1) : "Free"}
+                    </span>
+                  </div>
                   <div className="px-3 py-1.5 flex items-center justify-between">
                     <span className="text-xs text-slate-500">Credits</span>
                     <span className="text-xs font-bold text-violet-600">{credits}</span>
